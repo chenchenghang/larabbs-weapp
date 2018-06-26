@@ -1,0 +1,125 @@
+<style lang="less">
+.order-login-container wx-button {
+width: 579.9rpx;
+height: 100rpx;
+line-height: 93.8rpx;
+margin-bottom: 31.9rpx;
+text-align: center;
+display: block;
+}
+
+.order-login-container wx-image {
+width: 439.6rpx;
+height: 119.4rpx;
+display: block;
+margin: 119.4rpx auto 87.5rpx auto;
+}
+
+.button-auto-login {
+width: 100%;
+margin-top: 50rpx;
+}
+
+.login-tip {
+font-size: 27.8rpx;
+margin-top: 89.6rpx;
+text-align: center;
+}
+</style>
+<template>
+<view class="order-login-container">
+  <image src="https://nicokids-storage.oss-cn-hangzhou.aliyuncs.com/mp-images/nicokids-logo.png">
+  </image>
+  <view class="login-tip">登录后继续操作</view>
+  <button bindgetphonenumber="quickLogin" class="button-filled-green button-auto-login" openType="getPhoneNumber">微信快捷登录</button>
+  <button bindtap="loginByPhone" class="button-bordered-gray button-login">手机验证登录</button>
+</view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import api from '@/utils/api'
+
+  export default class Login extends wepy.page {
+    config = {
+      navigationBarTitleText: '登录'
+    }
+    data = {
+      // 用户名
+      username: '',
+      // 密码
+      password: '',
+      // 是否有错
+      error: false,
+      // 错误信息
+      errorMessage: ''
+    }
+    methods = {
+      // 绑定用户名 input 变化
+      bindUsernameInput (e) {
+        this.username = e.detail.value
+      },
+      // 绑定密码 input 变化
+      bindPasswordInput (e) {
+        this.password = e.detail.value
+      },
+      // 表单提交
+      async submit() {
+        // 提交时重置错误
+        this.error = false
+        this.errorMessage = ''
+
+        if (!this.username || !this.password) {
+          this.errorMessage = '请填写账户名和密码'
+          return
+        }
+
+        // 获取用户名和密码
+        let params = {
+          username: this.username,
+          password: this.password
+        }
+
+        try {
+          let authResponse = await api.login(params)
+
+          // 请求结果为 401 说明用户名和密码错误，显示错误提示
+          if (authResponse.statusCode === 401) {
+            this.error = true
+            this.errorMessage = authResponse.data.message
+            this.$apply()
+          }
+
+          // 201 为登录正确，返回上一页
+          if (authResponse.statusCode === 201) {
+            wepy.navigateBack()
+          }
+        } catch (err) {
+          wepy.showModal({
+            title: '提示',
+            content: '服务器错误，请联系管理员'
+          })
+        }
+      }
+    }
+    // 页面打开事件
+    async onShow() {
+      // try {
+      //   // 打开页面自动调用一次登录
+      //   //let authResponse = await api.login()
+
+      //   // 登录成功返回上一页
+      //   if (authResponse.statusCode === 201) {
+      //     wepy.navigateBack()
+      //   }
+      // } catch (err) {
+      //   wepy.showModal({
+      //     title: '提示',
+      //     content: '服务器错误，请联系管理员'
+      //   })
+      // }
+    }
+  }
+</script>
+ 
+
+ 
