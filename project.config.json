@@ -1,7 +1,7 @@
 {
 	"description": "larabbs weapp project",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": false,
 		"postcss": false,
 		"minified": false,
@@ -9,7 +9,7 @@
 	},
 	"compileType": "miniprogram",
 	"appid": "wx22ab1a4fda502e8f",
-	"projectname": "larabbs",
+	"projectname": "larabbs-weapp",
 	"miniprogramRoot": "./dist",
 	"condition": {
 		"search": {

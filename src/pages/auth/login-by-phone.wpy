@@ -1,11 +1,50 @@
 loginlogin<style lang="less">
-.order-login-container wx-button {
-width: 579.9rpx;
+.login-phone-container {
+padding: 0 29.9rpx;
+}
+.login-title {
+padding: 29.9rpx 0 39.6rpx 0;
+}
+.login-input-wrapper {
+position: relative;
+}
+.send-code-input {
+margin-top: 39.6rpx;
+}
+.login-input-wrapper wx-input {
+height: 89.6rpx;
+line-height: 89.6rpx;
+font-size: 31.9rpx;
+padding: 0 9.7rpx;
+border-bottom: 0.7rpx solid #f1f3f6;
+}
+.button-login {
+width: 100%;
 height: 100rpx;
-line-height: 93.8rpx;
-margin-bottom: 31.9rpx;
-text-align: center;
-display: block;
+line-height: 95.8rpx;
+margin-top: 35.4rpx;
+}
+.send-code-wrapper {
+height: 89.6rpx;
+line-height: 89.6rpx;
+padding: 0 19.4rpx;
+position: absolute;
+right: 0;
+top: 0;
+color: #FFFFFF;
+z-index: 10;
+}
+.send-code-trigger {
+font-size: 31.9rpx;
+color: #09bb07;
+}
+.send-code-trigger-disabled {
+opacity: 0.6;
+}
+.send-code-tip {
+font-size: 31.9rpx;
+color: #aaa;
+}
 }
 
 .order-login-container wx-image {
@@ -27,13 +66,24 @@ text-align: center;
 }
 </style>
 <template>
-<view class="order-login-container">
-  <image src="https://nicokids-storage.oss-cn-hangzhou.aliyuncs.com/mp-images/nicokids-logo.png">
-  </image>
-  <view class="login-tip">登录后继续操作</view>
-  <button bindgetphonenumber="quickLogin" class="button-filled-green button-auto-login" openType="getPhoneNumber">微信快捷登录</button>
-  <button url="/pages/auth/login-by-phone" class="button-bordered-gray button-login">手机验证登录</button>
-</view>
+<form bindsubmit="loginByPhone">
+  <view class="login-phone-container">
+    <view class="font-title login-title">手机号登录</view>
+    <view class="login-input-wrapper">
+      <input autoFocus="true" bindinput="bindInputPhone" name="phone" placeholder="输入手机号" type="number" >
+      </input>
+    </view>
+    <view class="login-input-wrapper send-code-input">
+      <input bindinput="bindInputAuthCode" name="authcode" placeholder="输入验证码"  type="number">
+      </input>
+      <view class="send-code-wrapper">
+        <view bindtap="sendCodeHandler" class="send-code-trigger send-code-trigger" wx:if="{{sended == 0}}">发送验证码</view>
+        <view class="send-code-tip" wx:if="{{sended>0}}" >重新发送（{{time}}）</view>
+      </view>
+    </view>
+    <button class="button-filled-green button-login button-login-disabled" formType="submit">登录</button>
+  </view>
+</form>
 </template>
 <script>
   import wepy from 'wepy'
@@ -44,6 +94,8 @@ text-align: center;
       navigationBarTitleText: '登录'
     }
     data = {
+      // 手机号
+      phone: '',
       // 用户名
       username: '',
       // 密码
