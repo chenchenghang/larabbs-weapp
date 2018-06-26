@@ -1,1 +1,2 @@
 ＃larabbs-weapp
+test
