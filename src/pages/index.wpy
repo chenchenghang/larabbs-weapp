@@ -52,20 +52,112 @@ page {
 .photos-img>image {
     width: 94%;
 }
+.artwork-tabs {
+    width: 100%;
+    height: 150rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 24rpx;
+    color: #101010;
+    background: #fff;
+}
+.artwork-mask {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 90;
+}
+.slide-image {
+  width: 100%;
+  height: 100%;
+}
+.artwork-tab-active {
+    color: #09BB07;
+}
+.artwork-tab {
+    width: 100%;
+    height: 150rpx;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    position: relative;
+    transition: all .1s ease-in-out;
+}
+.artwork-tab-active::after {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #fff;
+    position: absolute;
+    bottom: 0;
+    left: 40%;
+    content: " ";
+}
+.artwork-tab:active {
+    transform: scale(1.1);
+    z-index: 999;
+}
+.artwork-tab-item-title {
+    color: #fff;
+    font-size: 22px;
+    text-align: center;
+    font-family: 'STHeitiSC-Light';
+    align-self: center;
+    padding-top: 10rpx;
+}
+.artwork-tab-item-subtitle {
+    color: #fff;
+    padding-top: 4rpx;
+    font-size: 10px;
+    text-align: center;
+    align-self: center;
+}
 </style>
 <template>
-  <com></com>
+    <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
+      <block wx:for="{{adList}}" wx:key="key">
+        <swiper-item>
+          <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})" />
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="artwork-tabs">
+        <view bindtap="onSwitchTab" class="artwork-tab bg-color-{{item.class}} {{item.active?'artwork-tab-active':''}}" data-categoryid="{{item.category_id}}" wx:for="{{artworkTabs}}" wx:for-index="tab_index" wx:key="j">
+            <view class="artwork-tab-item-title">{{item.category_title}}</view>
+            <view class="artwork-tab-item-subtitle">{{item.category_slogan}}</view>
+        </view>
+    </view>
 </template>
 
 <script>
   import wepy from 'wepy'
   import api from '@/utils/api'
-  import item from '../components/list'
+  import config from '@/configs'
+  import dd1 from '@/dddd1'
+  import dd2 from '@/dddd2'
   export default class Login extends wepy.page {
     config = {
       navigationBarTitleText: '登录'
     }
     data = {
+      interval: 3000,
+      duration: 1000,
+      autoplay: true,
+      indicatorDots: true,
+      artworkTabs: config.artworkTabs,
+      indicatorActiveColor: '#fff',
+      adList: dd1.list,
+      dd1: dd1,
+      dd2: dd2,
       // 用户名
       // 密码
       packages: [],
@@ -73,9 +165,6 @@ page {
       photos: [],
       // 错误信息
       showMask: !1
-    }
-    components = {
-      com: item
     }
     methods = {
       // 绑定用户名 input 变化
@@ -127,6 +216,8 @@ page {
     }
     // 页面打开事件
     async onShow() {
+      console.log(dd1.list)
+      console.log(dd1)
       // try {
       //   // 打开页面自动调用一次登录
       //   //let authResponse = await api.login()

@@ -4,25 +4,25 @@ module.exports = {
     artworkTabs: [ {
         category_id: "285562b2cd03b6e447a1e402",
         category_title: "FACE",
-        category_slogan: "纯白·纯净",
+        category_slogan: "新生",
         class: "face",
         color: "#f04a8c"
     }, {
         category_id: "6aed59ed35e06b8f0077e6f1",
         category_title: "LOOK",
-        category_slogan: "型·时尚",
+        category_slogan: "百天",
         class: "look",
         color: "#50239e"
     }, {
         category_id: "8eef6d6bfa87801f885129a2",
         category_title: "BABY",
-        category_slogan: "周岁照·柔软",
+        category_slogan: "周岁",
         class: "baby",
         color: "#d3bd55"
     }, {
         category_id: "8c6fd56e8d8ff8d5a2731162",
         category_title: "THEME",
-        category_slogan: "小主题",
+        category_slogan: "亲子",
         class: "theme",
         color: "#96d1b7"
     } ],
