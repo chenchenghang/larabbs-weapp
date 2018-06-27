@@ -1,4 +1,4 @@
-loginlogin<style lang="less">
+<style lang="less">
 .order-login-container wx-button {
 width: 579.9rpx;
 height: 100rpx;
@@ -7,19 +7,16 @@ margin-bottom: 31.9rpx;
 text-align: center;
 display: block;
 }
-
 .order-login-container wx-image {
 width: 439.6rpx;
 height: 119.4rpx;
 display: block;
 margin: 119.4rpx auto 87.5rpx auto;
 }
-
 .button-auto-login {
 width: 100%;
 margin-top: 50rpx;
 }
-
 .login-tip {
 font-size: 27.8rpx;
 margin-top: 89.6rpx;
@@ -32,7 +29,9 @@ text-align: center;
   </image>
   <view class="login-tip">登录后继续操作</view>
   <button bindgetphonenumber="quickLogin" class="button-filled-green button-auto-login" openType="getPhoneNumber">微信快捷登录</button>
-  <button url="/pages/auth/login-by-phone" class="button-bordered-gray button-login">手机验证登录</button>
+  <navigator class="weui-cell weui-cell_access" url="/pages/auth/login-by-phone">
+ 	 <button  class="button-bordered-gray button-login">手机验证登录</button>
+  </navigator>
 </view>
 </template>
 <script>

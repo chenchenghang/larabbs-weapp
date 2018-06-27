@@ -1,7 +1,6 @@
 var e = require("./WXBizDataCrypt"),
     t = require("../configs"),
     n = require("./cryptojs/cryptojs.js").Crypto,
-    r = require("moment.min.js"),
     a = function(e) { return (e = e.toString())[1] ? e : "0" + e },
     o = function(e) { if (console.log("d", e), !e) return ""; var t = new Date(i(e)); return t.getFullYear() + "年" + (t.getMonth() + 1) + "月" + t.getDate() + "日(周" + ["日", "一", "二", "三", "四", "五", "六"][t.getDay()] + ")" },
     i = function(e) { var t = e.replace(/\-/g, ""); return [t.substr(0, 4), t.substr(4, 2), t.substr(6, 2)].join("-") },

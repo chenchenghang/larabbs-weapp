@@ -1,11 +1,147 @@
+<style lang="less">
+page {
+    width: 100vw;
+    background: #fff;
+}
+.photos-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+}
+.photos-title {
+    color: #353535;
+    font-weight: bold;
+    padding: 20rpx 0 50rpx 0;
+    position: relative;
+}
+.photos-header {
+    width: 100%;
+    padding: 0 30rpx 24rpx 30rpx;
+    background: #fff;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+}
+.photos-list {
+    width: 100%;
+    padding: 20rpx 0rpx 0rpx;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.photos-column {
+    width: calc((100% - 10rpx) / 2);
+    display: flex;
+    flex-flow: column wrap;
+}
+.photos-item {
+    width: 100%;
+    align-self: center;
+    margin-bottom: 14rpx;
+}
+.photos-img {
+    width: 100%;
+    border: 0 solid #efefef;
+    padding: 8rpx 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.photos-img>image {
+    width: 94%;
+}
+</style>
 <template>
-  <view class="container">
-    首页话题列表
-  </view>
+  <com></com>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import api from '@/utils/api'
+  import item from '../components/list'
+  export default class Login extends wepy.page {
+    config = {
+      navigationBarTitleText: '登录'
+    }
+    data = {
+      // 用户名
+      // 密码
+      packages: [],
+      // 是否有错
+      photos: [],
+      // 错误信息
+      showMask: !1
+    }
+    components = {
+      com: item
+    }
+    methods = {
+      // 绑定用户名 input 变化
+      bindUsernameInput (e) {
+        this.username = e.detail.value
+      },
+      // 绑定密码 input 变化
+      bindPasswordInput (e) {
+        this.password = e.detail.value
+      },
+      // 表单提交
+      async submit() {
+        // 提交时重置错误
+        this.error = false
+        this.errorMessage = ''
 
-  export default class Index extends wepy.page {}
-</script> 
+        if (!this.username || !this.password) {
+          this.errorMessage = '请填写账户名和密码'
+          return
+        }
+
+        // 获取用户名和密码
+        let params = {
+          username: this.username,
+          password: this.password
+        }
+
+        try {
+          let authResponse = await api.login(params)
+
+          // 请求结果为 401 说明用户名和密码错误，显示错误提示
+          if (authResponse.statusCode === 401) {
+            this.error = true
+            this.errorMessage = authResponse.data.message
+            this.$apply()
+          }
+
+          // 201 为登录正确，返回上一页
+          if (authResponse.statusCode === 201) {
+            wepy.navigateBack()
+          }
+        } catch (err) {
+          wepy.showModal({
+            title: '提示',
+            content: '服务器错误，请联系管理员'
+          })
+        }
+      }
+    }
+    // 页面打开事件
+    async onShow() {
+      // try {
+      //   // 打开页面自动调用一次登录
+      //   //let authResponse = await api.login()
+
+      //   // 登录成功返回上一页
+      //   if (authResponse.statusCode === 201) {
+      //     wepy.navigateBack()
+      //   }
+      // } catch (err) {
+      //   wepy.showModal({
+      //     title: '提示',
+      //     content: '服务器错误，请联系管理员'
+      //   })
+      // }
+    }
+  }
+</script>
+ 

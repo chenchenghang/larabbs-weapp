@@ -1,4 +1,4 @@
-loginlogin<style lang="less">
+<style lang="less">
 .login-phone-container {
 padding: 0 29.9rpx;
 }
@@ -45,20 +45,16 @@ opacity: 0.6;
 font-size: 31.9rpx;
 color: #aaa;
 }
-}
-
 .order-login-container wx-image {
 width: 439.6rpx;
 height: 119.4rpx;
 display: block;
 margin: 119.4rpx auto 87.5rpx auto;
 }
-
 .button-auto-login {
 width: 100%;
 margin-top: 50rpx;
 }
-
 .login-tip {
 font-size: 27.8rpx;
 margin-top: 89.6rpx;
@@ -94,8 +90,14 @@ text-align: center;
       navigationBarTitleText: '登录'
     }
     data = {
-      // 手机号
-      phone: '',
+        //  验证码时间
+      phone: '60',
+        // 开始计时
+      sended: !1,
+        // 验证码
+      authcode: '',
+      // 验证码token
+      key: '',
       // 用户名
       username: '',
       // 密码
