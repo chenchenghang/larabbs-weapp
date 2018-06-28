@@ -15,7 +15,7 @@
 <script>
   import wepy from 'wepy'
 
-  export default class User extends wepy.page {
+  export default class Login extends wepy.page {
     config = {
       navigationBarTitleText: '我的'
     }

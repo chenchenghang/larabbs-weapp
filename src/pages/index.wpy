@@ -1,4 +1,122 @@
-<style lang="less">
+<template>
+    <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
+      <block wx:for="{{adList}}" wx:key="key">
+        <swiper-item>
+          <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})" />
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="artwork-tabs">
+        <view bindtap="onSwitchTab" class="artwork-tab bg-color-{{item.class}} {{item.active?'artwork-tab-active':''}}" data-categoryid="{{item.category_id}}" wx:for="{{artworkTabs}}" wx:for-index="tab_index" wx:key="j">
+            <view class="artwork-tab-item-title">{{item.category_title}}</view>
+            <view class="artwork-tab-item-subtitle">{{item.category_slogan}}</view>
+        </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import api from '@/utils/api'
+  import config from '@/configs'
+  import dd1 from '@/dddd1'
+  import dd2 from '@/dddd2'
+  export default class Login extends wepy.page {
+    config = {
+      navigationBarTitleText: '登录'
+    }
+    data = {
+      interval: 3000,
+      duration: 1000,
+      autoplay: true,
+      indicatorDots: true,
+      artworkTabs: config.artworkTabs,
+      indicatorActiveColor: '#fff',
+      adList: dd1.list,
+      dd1: dd1,
+      dd2: dd2,
+      // 用户名
+      // 密码
+      packages: [],
+      // 是否有错
+      photos: [],
+      // 错误信息
+      showMask: !1
+    }
+    methods = {
+      // 绑定用户名 input 变化
+      bindUsernameInput (e) {
+        this.username = e.detail.value
+      },
+      // 绑定密码 input 变化
+      bindPasswordInput (e) {
+        this.password = e.detail.value
+      },
+      // 表单提交
+      async submit() {
+        // 提交时重置错误
+        this.error = false
+        this.errorMessage = ''
+
+        if (!this.username || !this.password) {
+          this.errorMessage = '请填写账户名和密码'
+          return
+        }
+
+        // 获取用户名和密码
+        let params = {
+          username: this.username,
+          password: this.password
+        }
+
+        try {
+          let authResponse = await api.login(params)
+
+          // 请求结果为 401 说明用户名和密码错误，显示错误提示
+          if (authResponse.statusCode === 401) {
+            this.error = true
+            this.errorMessage = authResponse.data.message
+            this.$apply()
+          }
+
+          // 201 为登录正确，返回上一页
+          if (authResponse.statusCode === 201) {
+            wepy.navigateBack()
+          }
+        } catch (err) {
+          wepy.showModal({
+            title: '提示',
+            content: '服务器错误，请联系管理员'
+          })
+        }
+      }
+    }
+    async onSwitchTab (e) {
+      this.$preload(e.currentTarget.dataset.categoryid, 'Gcaufy')
+      console.log(e.currentTarget.dataset.categoryid)
+      this.$redirect('/pages/photos', {categoryid: e.currentTarget.dataset.categoryid})
+    }
+    // 页面打开事件
+    async onShow() {
+      console.log(dd1.list)
+      console.log(dd1)
+      // try {
+      //   // 打开页面自动调用一次登录
+      //   //let authResponse = await api.login()
+
+      //   // 登录成功返回上一页
+      //   if (authResponse.statusCode === 201) {
+      //     wepy.navigateBack()
+      //   }
+      // } catch (err) {
+      //   wepy.showModal({
+      //     title: '提示',
+      //     content: '服务器错误，请联系管理员'
+      //   })
+      // }
+    }
+  }
+</script>
+ <style lang="less">
 page {
     width: 100vw;
     background: #fff;
@@ -122,117 +240,3 @@ page {
     align-self: center;
 }
 </style>
-<template>
-    <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
-      <block wx:for="{{adList}}" wx:key="key">
-        <swiper-item>
-          <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})" />
-        </swiper-item>
-      </block>
-    </swiper>
-    <view class="artwork-tabs">
-        <view bindtap="onSwitchTab" class="artwork-tab bg-color-{{item.class}} {{item.active?'artwork-tab-active':''}}" data-categoryid="{{item.category_id}}" wx:for="{{artworkTabs}}" wx:for-index="tab_index" wx:key="j">
-            <view class="artwork-tab-item-title">{{item.category_title}}</view>
-            <view class="artwork-tab-item-subtitle">{{item.category_slogan}}</view>
-        </view>
-    </view>
-</template>
-
-<script>
-  import wepy from 'wepy'
-  import api from '@/utils/api'
-  import config from '@/configs'
-  import dd1 from '@/dddd1'
-  import dd2 from '@/dddd2'
-  export default class Login extends wepy.page {
-    config = {
-      navigationBarTitleText: '登录'
-    }
-    data = {
-      interval: 3000,
-      duration: 1000,
-      autoplay: true,
-      indicatorDots: true,
-      artworkTabs: config.artworkTabs,
-      indicatorActiveColor: '#fff',
-      adList: dd1.list,
-      dd1: dd1,
-      dd2: dd2,
-      // 用户名
-      // 密码
-      packages: [],
-      // 是否有错
-      photos: [],
-      // 错误信息
-      showMask: !1
-    }
-    methods = {
-      // 绑定用户名 input 变化
-      bindUsernameInput (e) {
-        this.username = e.detail.value
-      },
-      // 绑定密码 input 变化
-      bindPasswordInput (e) {
-        this.password = e.detail.value
-      },
-      // 表单提交
-      async submit() {
-        // 提交时重置错误
-        this.error = false
-        this.errorMessage = ''
-
-        if (!this.username || !this.password) {
-          this.errorMessage = '请填写账户名和密码'
-          return
-        }
-
-        // 获取用户名和密码
-        let params = {
-          username: this.username,
-          password: this.password
-        }
-
-        try {
-          let authResponse = await api.login(params)
-
-          // 请求结果为 401 说明用户名和密码错误，显示错误提示
-          if (authResponse.statusCode === 401) {
-            this.error = true
-            this.errorMessage = authResponse.data.message
-            this.$apply()
-          }
-
-          // 201 为登录正确，返回上一页
-          if (authResponse.statusCode === 201) {
-            wepy.navigateBack()
-          }
-        } catch (err) {
-          wepy.showModal({
-            title: '提示',
-            content: '服务器错误，请联系管理员'
-          })
-        }
-      }
-    }
-    // 页面打开事件
-    async onShow() {
-      console.log(dd1.list)
-      console.log(dd1)
-      // try {
-      //   // 打开页面自动调用一次登录
-      //   //let authResponse = await api.login()
-
-      //   // 登录成功返回上一页
-      //   if (authResponse.statusCode === 201) {
-      //     wepy.navigateBack()
-      //   }
-      // } catch (err) {
-      //   wepy.showModal({
-      //     title: '提示',
-      //     content: '服务器错误，请联系管理员'
-      //   })
-      // }
-    }
-  }
-</script>
- 

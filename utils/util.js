@@ -1,3 +1,4 @@
+import wepy from 'wepy'
 var e = require("./WXBizDataCrypt"),
     t = require("../configs"),
     n = require("./cryptojs/cryptojs.js").Crypto,
