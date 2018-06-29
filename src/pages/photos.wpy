@@ -12,6 +12,9 @@
         </swiper-item>
       </block>
     </swiper>
+        <view bindtap="openModal" class="button-bottom {{isIpx?'fix-iphonex-button':''}} ">
+            <button class="button" formType="submit" type="primary">下一步</button>
+        </view>
 </template>
 
 <script>
@@ -27,6 +30,13 @@
       artworkTabs: config.artworkTabs
     }
     onShow(params) {
+      console.log(params)
+      var o = params
+      var e = config.artworkTabs(o)
+      var n = e.find(function(t){
+        retrun params === o
+      })
+      console.log(config.artworkTabs)
       if (wepy.getStorageSync('access_token')) {
         this.loggedIn = true
       }

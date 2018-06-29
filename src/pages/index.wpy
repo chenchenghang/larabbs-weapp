@@ -7,7 +7,7 @@
       </block>
     </swiper>
     <view class="artwork-tabs">
-        <view bindtap="onSwitchTab" class="artwork-tab bg-color-{{item.class}} {{item.active?'artwork-tab-active':''}}" data-categoryid="{{item.category_id}}" wx:for="{{artworkTabs}}" wx:for-index="tab_index" wx:key="j">
+        <view bindtap="onSwitchTab" class="artwork-tab bg-color-{{item.class}} " data-categoryid="{{item.category_id}}" wx:for="{{artworkTabs}}" wx:for-index="tab_index" wx:key="j">
             <view class="artwork-tab-item-title">{{item.category_title}}</view>
             <view class="artwork-tab-item-subtitle">{{item.category_slogan}}</view>
         </view>
@@ -93,7 +93,7 @@
     async onSwitchTab (e) {
       this.$preload(e.currentTarget.dataset.categoryid, 'Gcaufy')
       console.log(e.currentTarget.dataset.categoryid)
-      this.$redirect('/pages/photos', {categoryid: e.currentTarget.dataset.categoryid})
+      this.$navigate('/pages/photos', {categoryid: e.currentTarget.dataset.categoryid})
     }
     // 页面打开事件
     async onShow() {
