@@ -1,17 +1,74 @@
 <template>
     <view class="artwork-tabs">
-        <view bindtap="onSwitchTab" class="artwork-tab bg-color-{{item.class}} {{item.active?'artwork-tab-active':''}}" data-categoryid="{{item.category_id}}" wx:for="{{artworkTabs}}" wx:for-index="tab_index" wx:key="j">
+        <view bindtap="onSwitchTab" class="artwork-tab bg-color-{{item.class}} {{item.active?'artwork-tab-active':''}}" data-categoryid="{{item.category_id}}" wx:for="{{artworkTabs}}" wx:for-index="tab_index" wx:key="j" data-index="{{tab_index}}">
             <view class="artwork-tab-item-title">{{item.category_title}}</view>
             <view class="artwork-tab-item-subtitle">{{item.category_slogan}}</view>
         </view>
     </view>
-<swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
-      <block wx:for="{{adList}}" wx:key="key">
-        <swiper-item>
-          <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})" />
-        </swiper-item>
-      </block>
-    </swiper>
+
+    <view class="package-info">
+    <view  class="package-option-title">
+
+      {{categories[index].title}}
+    </view>
+    <view  class="package-choose">
+      {{categories[index].subtitle}}
+       </view>
+        <view  class="package-option-slogan">
+      {{categories[index].slogan}}
+        </view>
+   
+        <view class="package-choose">请选择套餐</view>
+        <view class="package-options">
+
+                    <view bindtouchstart="onSelectPackage" class="package-option {{package.id===packageId?'active vi-bg-'+class+' vi-border-'+class:''}}" data-categoryid="{{categoryId}}"  wx:for="{{packages.options}}" wx:for-index="packageIndex" wx:for-item="package" data-packageid="{{package.id}}" >
+                        <view class="package-option-checkbox">
+                            <image class="checkbox"  wx:if="{{package.id===packageId}}" src="https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=1588189011,795228878&fm=173&app=25&f=JPEG?w=218&h=146&s=41B87AD94EA2B04B182DD40E0300E0C5"></image>
+                        </view>
+                        <view class="package-option-title">
+                            {{package.title}}
+                        </view>
+                        <view class="package-option-content">
+                            <span class="price">{{package.price}}</span>
+                            <span class="label">元</span>
+                        </view>
+                    </view>
+                        </view>
+                    </view>
+                    <view class="package-info2" >
+                         <view class="package-options" >
+                         <view class="package-feature-item  vi-border-{{class}}" wx:for="{{packages.options[topindex].detailed[0]}}" wx:for-item="detailed" wx:for-index="detailedIndex">
+                            <view class="package-description-detail vi-bg-{{class}}">
+                             <view  class="package-choose">
+                                  {{detailedIndex}}
+                            </view>
+                             </view>
+                            <view class="package-description-content">
+                              {{detailed}}
+                            </view>
+                         </view>
+                          
+                        </view>
+
+                    </view>
+
+                        <view class="package-info2">
+                    <view class="package-description vi-border-{{class}}">
+                        <view class="package-description-title vi-bg-{{class}}">
+                         特别说明
+                         </view>
+
+                        <view class="package-description-content">
+
+                            <text>{{packages.options[topindex].content}}</text>
+                        </view>
+                    </view>
+                    </view>
+                                                <text>{{index}}</text>
+                            <text>{{topindex}}</text>
+                </view>
+
+
         <view bindtap="openModal" class="button-bottom {{isIpx?'fix-iphonex-button':''}} ">
             <button class="button" formType="submit" type="primary">下一步</button>
         </view>
@@ -20,35 +77,56 @@
 <script>
   import wepy from 'wepy'
   import config from '@/configs'
+  import package1 from '@/package'
   import util from '@/utils/util'
   export default class Login extends wepy.page {
     config = {
       navigationBarTitleText: '套餐预定'
     }
     data = {
+      categories: package1.categories,
       loggedIn: false,
-      artworkTabs: config.artworkTabs
+      zhuti: package1.categories,
+      artworkTabs: config.artworkTabs,
+      packageId: '00',
+      packages: package1.packages,
+      index: 0,
+      topindex: '0'
+
     }
-    onShow(params) {
-      console.log(params)
-      var o = params
-      var e = config.artworkTabs(o)
-      var n = e.find(function(t){
-        retrun params === o
-      })
-      console.log(config.artworkTabs)
-      if (wepy.getStorageSync('access_token')) {
-        this.loggedIn = true
-      }
+    onShow() {
+      console.log('packages')
+      console.log(package1.packages)
+      console.log(this.packageId)
     }
     onLoad(params) {
+      console.log('params')
       console.log(params)
+      this.packageId = params.categoryid
+      this.index = params.index
+      var i = params.index
+      this.packages = package1.packages[i]
+      console.log(this.packageId)
       if (wepy.getStorageSync('access_token')) {
         this.loggedIn = true
       }
+      this.onSwitchTab(params.categoryid)
     }
     async onSwitchTab(t) {
-      var o = t.currentTarget.dataset.categoryid
+      this.packageId = '0'
+      this.topindex = '0'
+      console.log('onSwitchTab')
+      console.log(t)
+      var o = ''
+      if (t.currentTarget === undefined) {
+        o = t
+      } else {
+        o = t.currentTarget.dataset.categoryid
+        var i = t.currentTarget.dataset.index
+        this.index = i
+        this.packages = package1.packages[i]
+      }
+      /* var o = t.currentTarget.dataset.categoryid */
       var e = util.artworkTabs(o)
       var n = e.find(function(t) {
         return t.category_id === o
@@ -60,9 +138,230 @@
         class: n.class
       })
     }
+    async onSelectPackage(t) {
+      console.log(this.packages.options[0].detailed[0])
+      console.log('onSelectPackage')
+      console.log(t.currentTarget.dataset.packageid)
+      this.topindex = t.currentTarget.dataset.packageid
+      this.packageId = t.currentTarget.dataset.packageid
+    }
+    async openModal() {
+      this.$navigate('/pages/postdata', {index: this.index, topindex: this.topindex})
+    }
   }
 </script> 
 <style lang="less">
+.vi-bg-baby {
+    background-color: #d3bd55!important;
+}
+
+.vi-border-baby {
+    border-color: #d3bd55!important;
+}
+
+.vi-bg-face {
+    background-color: #f04a8c!important;
+}
+
+.vi-border-face {
+    border-color: #f04a8c!important;
+}
+
+.vi-bg-look {
+    background-color: #50239e!important;
+}
+
+.vi-border-look {
+    border-color: #50239e!important;
+}
+
+.vi-bg-theme {
+    background-color: #96d1b7!important;
+}
+
+.vi-border-theme {
+    border-color: #96d1b7!important;
+}
+
+.package-info {
+    padding: 0 30rpx;
+}
+.package-info2 {
+    padding: 0 60rpx;
+}
+.package-options {
+    display: flex;
+    flex-direction: row;
+    padding: 0 10rpx;
+}
+
+.package-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #cccccc;
+    color: #b3b3b3;
+    border-radius: 10rpx;
+    margin: 0 10rpx 50rpx;
+    height: 140rpx;
+    position: relative;
+}
+
+.package-option.active {
+    color: #fff;
+}
+
+.package-option-checkbox {
+    position: absolute;
+    top: -28rpx;
+    right: -16rpx;
+}
+
+.package-option-checkbox .checkbox {
+    width: 68rpx;
+    height: 68rpx;
+}
+
+.package-option-title {
+    width: 100%;
+    height: 50rpx;
+    flex: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52rpx;
+    font-weight: bold;
+    font-family: 'HelveticaNeue','Helvetica';
+    padding-top: 24rpx;
+}
+.package-option-slogan{
+    width: 100%;
+    height: 50rpx;
+    flex: 6;
+    display: flex;
+    color: #f04a8c;
+    align-items: center;
+    justify-content: center;
+    font-size: 45rpx;
+    font-weight: bold;
+    font-family: 'HelveticaNeue','Helvetica';
+    padding-top: 15rpx;
+}
+.package-option-content {
+    flex: 4;
+    width: 100%;
+    align-self: flex-start;
+    font-size: 54rpx;
+    text-align: center;
+    padding-bottom: 0;
+}
+
+.package-option-content span.price {
+    font-size: 38rpx;
+}
+
+.package-option-content span.label {
+    font-size: 32rpx;
+    padding: 4rpx;
+}
+
+.package-choose {
+    padding: 36rpx 0;
+    font-size: 26rpx;
+    text-align: center;
+}
+
+.package-feature {
+    font-size: 12px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.package-feature-items {
+    display: flex;
+    flex-direction: row;
+}
+
+.package-feature-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1rpx solid #d3bd55;
+    border-radius: 10rpx;
+    margin: 0 4rpx 8rpx;
+    height: 120rpx;
+    overflow: hidden;
+}
+
+.package-feature-item-title {
+    flex: 4;
+    color: #fff;
+    background-color: #d3bd55;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50rpx;
+}
+
+.package-feature-item-content {
+    flex: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36rpx;
+    font-weight: lighter;
+}
+
+.package-description {
+    margin-top: 10rpx;
+    margin-bottom: 90rpx;
+    border: 1rpx solid #d3bd55;
+    border-radius: 10rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.package-description-title {
+    width: 100%;
+    height: 60rpx;
+    flex: 4;
+    color: #fff;
+    background-color: #d3bd55;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.package-description-detail {
+    width: 100%;
+    height: 60rpx;
+    flex: 4;
+    color: #fff;
+    background-color: #d3bd55;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.package-description-content {
+    flex: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'HelveticaNeue-Bold','Helvetica-Bold';
+}
+
+.package-description text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    padding: 30rpx 20rpx;
+    font-size: 12px;
+    line-height: 1.75;
+}
 .artwork-tabs {
     width: 100%;
     height: 150rpx;

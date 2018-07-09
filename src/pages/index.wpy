@@ -7,7 +7,8 @@
       </block>
     </swiper>
     <view class="artwork-tabs">
-        <view bindtap="onSwitchTab" class="artwork-tab bg-color-{{item.class}} " data-categoryid="{{item.category_id}}" wx:for="{{artworkTabs}}" wx:for-index="tab_index" wx:key="j">
+        <view bindtap="onSwitchTab" class="artwork-tab bg-color-{{item.class}} " data-categoryid="{{item.category_id}}"   wx:for="{{artworkTabs}}" wx:for-index="tab_index" wx:key="j"
+        data-index="{{tab_index}}">
             <view class="artwork-tab-item-title">{{item.category_title}}</view>
             <view class="artwork-tab-item-subtitle">{{item.category_slogan}}</view>
         </view>
@@ -91,9 +92,10 @@
       }
     }
     async onSwitchTab (e) {
-      this.$preload(e.currentTarget.dataset.categoryid, 'Gcaufy')
-      console.log(e.currentTarget.dataset.categoryid)
-      this.$navigate('/pages/photos', {categoryid: e.currentTarget.dataset.categoryid})
+      this.$preload(e.currentTarget.dataset.categoryid, e.currentTarget.dataset.index)
+      console.log('e123123')
+      console.log(e)
+      this.$navigate('/pages/photos', {categoryid: e.currentTarget.dataset.categoryid, index: e.currentTarget.dataset.index})
     }
     // 页面打开事件
     async onShow() {

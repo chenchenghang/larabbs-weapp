@@ -3,25 +3,25 @@ module.exports = {
     appVersion: "0.17",
     artworkTabs: [ {
         category_id: "285562b2cd03b6e447a1e402",
-        category_title: "FACE",
-        category_slogan: "新生",
+        category_title: "NewBorn",
+        category_slogan: "新生儿",
         class: "face",
         color: "#f04a8c"
     }, {
         category_id: "6aed59ed35e06b8f0077e6f1",
-        category_title: "LOOK",
+        category_title: "Baby",
         category_slogan: "百天",
         class: "look",
         color: "#50239e"
     }, {
         category_id: "8eef6d6bfa87801f885129a2",
-        category_title: "BABY",
+        category_title: "Kids",
         category_slogan: "周岁",
         class: "baby",
         color: "#d3bd55"
     }, {
         category_id: "8c6fd56e8d8ff8d5a2731162",
-        category_title: "THEME",
+        category_title: "family",
         category_slogan: "亲子",
         class: "theme",
         color: "#96d1b7"

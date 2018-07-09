@@ -8,7 +8,7 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"appid": "wx22ab1a4fda502e8f",
+	"appid": "touristappid",
 	"projectname": "larabbs-weapp",
 	"miniprogramRoot": "./dist",
 	"condition": {
