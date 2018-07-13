@@ -19,7 +19,11 @@
                     </view>
                 </view>
             </view>
+
+
+
             <view class="weui-cells__title">宝贝信息</view>
+            <view class="weui-cells weui-cells_after-title">
                 <view class="weui-cell weui-cell_input">
                     <view class="weui-cell__hd">
                         <view class="weui-label">宝贝生日</view>
@@ -45,45 +49,43 @@
                     <view class="weui-cell__bd">
                         <input class="weui-input" placeholder="请输入宝贝小名" />
                     </view>
-                </view>
-                <view class="weui-cells__title">宝贝性别</view>
-		            <view class="weui-cells weui-cells_after-title">
-		                <radio-group @change="radiosexChange">
-		                    <label class="weui-cell weui-check__label" wx:for="{{radioSexItems}}" wx:key="value">
-		                        <radio class="weui-check" value="{{item.value}}" checked="{{item.checked}}"/>
-		                        <view class="weui-cell__bd">{{item.name}}</view>
-		                        <view class="weui-cell__ft weui-cell__ft_in-radio" wx:if="{{item.checked}}">
-		                            <icon class="weui-icon-radio" type="success_no_circle" size="16"></icon>
-		                        </view>
-		                    </label>
-		                </radio-group>
-		                <view class="weui-cell weui-cell_link">
-		                    <view class="weui-cell__bd">添加更多</view>
-		                </view>
-                 </view>
-
+                </view> 
                 <view class="weui-cell weui-cell_input">
                     <view class="weui-cell__hd">
-                        <view class="weui-label">时间</view>
+                        <view class="weui-label">宝贝性别</view>
                     </view>
                     <view class="weui-cell__bd">
-                        <picker mode="time" value="{{time}}" start="09:01" end="21:01" @change="bindTimeChange">
-                            <view class="weui-input">{{time}}</view>
-                        </picker>
+                        <radio-group  @change="radioSexChange">
+                            <label class="weui-cell weui-cell2   weui-check__label" wx:for="{{radioSexItems}}" wx:key="value">
+                                <radio class="weui-check" value="{{item.value}}" checked="{{item.checked}}"/>
+                                <view class="weui-cell__hd weui-check__hd_in-checkbox">
+                                    <icon class="weui-icon-checkbox_circle" type="circle" size="23" wx:if="{{!item.checked}}"></icon>
+                                    <icon class="weui-icon-checkbox_success" type="success" size="23" wx:if="{{item.checked}}"></icon>
+                                </view>
+                                <view class="weui-cell__bd">{{item.name}}</view>
+                            </label>
+                        </radio-group>
                     </view>
-                </view>
-                <view class="weui-cell weui-cell_input weui-cell_vcode">
-                    <view class="weui-cell__hd">
-                        <view class="weui-label">验证码</view>
-                    </view>
-                    <view class="weui-cell__bd">
-                        <input class="weui-input" placeholder="请输入验证码" />
-                    </view>
-                    <view class="weui-cell__ft">
-                        <image class="weui-vcode-img" src="../images/vcode.png" style="width: 108px"></image>
-                    </view>
-                </view>
-                </view>
+                </view>    
+            </view>         
+        <view class="weui-cells__title">是否同意将画册作为展示</view>
+            <view class="weui-cells weui-cells_after-title">
+                 <view class="weui-cell weui-cell_input">
+                <radio-group @change="radioShowChange">
+                    <label class="weui-cell weui-cell2   weui-check__label" wx:for="{{radioShowItems}}" wx:key="value">
+                        <radio class="weui-check" value="{{item.value}}" checked="{{item.checked}}"/>
+                        <view class="weui-cell__hd weui-check__hd_in-checkbox">
+                            <icon class="weui-icon-checkbox_circle" type="circle" size="23" wx:if="{{!item.checked}}"></icon>
+                            <icon class="weui-icon-checkbox_success" type="success" size="23" wx:if="{{item.checked}}"></icon>
+                        </view>
+                        <view class="weui-cell__bd">{{item.name}}</view>
+                    </label>
+                </radio-group>
+            </view>
+            </view> 
+        <view bindtap="postData" class="button-bottom {{isIpx?'fix-iphonex-button':''}} ">
+            <button class="button" formType="submit" type="primary">提交订单</button>
+        </view>
 </template>
 <script>
   import wepy from 'wepy'
@@ -93,17 +95,27 @@
     }
     data = {
       Birthdate: '2016-09-01',
-      radioSexItems : [
-        {name: '男宝宝', value: '0', checked: false},
-        {name: '女宝宝', value: '1', checked: true}
+      radioSexItems: [
+        {name: '男', value: '0', checked: true},
+        {name: '女', value: '1', checked: false}
+      ],
+      radioShowItems: [
+        {name: '是', value: '0', checked: true},
+        {name: '否', value: '1', checked: false}
       ]
-    };
+    }
     methods = {
-      radioChange (e) {
-        console.log('radio发生change事件，携带value值为：', e.detail.value);
-        this.radioItems.forEach(v => {
-          v.checked = v.value === e.detail.value;
-        });
+      radioSexChange (e) {
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
+        this.radioSexItems.forEach(v => {
+          v.checked = v.value === e.detail.value
+        })
+      },
+      radioShowChange (e) {
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
+        this.radioShowItems.forEach(v => {
+          v.checked = v.value === e.detail.value
+        })
       },
       bindBirthdateChange (e) {
         this.Birthdate = e.detail.value
@@ -117,5 +129,14 @@
       console.log('onLoad')
       console.log(e)
     }
+    async openModal() {
+      this.$navigate('/pages/index', {index: this.index, topindex: this.topindex})
+    }
 }
 </script>
+<style lang="less">
+.weui-cell2
+{
+    float:left;
+}
+</style>
